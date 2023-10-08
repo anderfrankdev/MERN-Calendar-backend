@@ -1,0 +1,4 @@
+type Query {
+  record(id: ID!): String
+  records: String
+}
