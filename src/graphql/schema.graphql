@@ -2,3 +2,29 @@ type Query {
   record(id: ID!): String
   records: String
 }
+type Event {
+    id:String
+    title: String
+    notes: String
+    start: String
+    end: String
+}
+type Mutation {
+    createUser(fullname: String!, email: String!, password: String!): Response
+    refreshJwt(token:String!): Response
+
+}
+type User{
+  id:ID
+  fullname:String
+  email:String
+  events:[Event]  
+}
+scalar Message
+
+type Response {
+    ok:Boolean
+    user:User
+    token:String
+    message:Message
+}
