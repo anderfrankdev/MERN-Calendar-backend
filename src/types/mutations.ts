@@ -32,6 +32,11 @@ export interface eventResponse extends Response {
   user?: User;
   message?: string | string[];
 }
+export interface getEventsResponse extends Response {
+  ok:boolean;
+  message:string;
+  events?:Event[]
+}
 type createUserInput = {
   fullname: string;
   email: string;
@@ -47,4 +52,5 @@ export interface Mutation {
   ): Promise<Response>;
   createEvent(_: any, args: EventInput, context: any): Promise<eventResponse>;
   updateEvent(_: any, args: EventInput, context: any): Promise<eventResponse>;
+  getEvents(_: any, args: {createdBy:string, token:string}, context: any): Promise<getEventsResponse>;
 }

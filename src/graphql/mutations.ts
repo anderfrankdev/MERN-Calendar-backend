@@ -12,6 +12,9 @@ import { isValidLoginInput } from "../helpers/isValidLoginInput.js";
 import { isStartDateBeforeEndDate } from "../helpers/isStartDateBeforeEndDate.js";
 import validator from "validator";
 import { isValidUpdateEventInput } from "../helpers/isValidUpdateEventInput.js";
+import { cleanUndefinedProps } from "../helpers/cleanUndefinedProps.js";
+import { updateEventInDb } from "../helpers/updateEventInDb.js";
+import { getEventsForUser } from "../helpers/getEventsForUserInDb.js";
 
 const createUser: Mutation["createUser"] = async (_, args, context) => {
   const { fullname, email, password } = args;
@@ -71,14 +74,17 @@ const login: Mutation["login"] = async (_, args, context) => {
     if (!validPassword)
       return { ok: false, message: "Invalid email or password" };
     const token = await generateJWT(user.id);
+    const events = await getEventsForUser(user.id)
 
     return {
       ok: true,
+      user: { ...user.toJSON(),events },
       token,
     };
   }
   return { ok: false, message: "Invalid email or password" };
 };
+
 const createEvent: Mutation["createEvent"] = async (_, args, context) => {
   const { title, notes, start, end, token } = args;
 
@@ -99,46 +105,42 @@ const createEvent: Mutation["createEvent"] = async (_, args, context) => {
 
 const updateEvent: Mutation["updateEvent"] = async (_, args, context) => {
     const { id,title, notes, start, end, token } = args;
+    
+    const update = cleanUndefinedProps({ title, notes, start, end })
+
+    if(update?.title?.length<1)
+      return { ok: false, message: "Title can not be empty" }
+
     if(!validator.default.isMongoId(id))
-        return { ok: false, message: "Invalid id" }
+      return { ok: false, message: "Invalid id" }
     
     const event = await Event.findById(id);
     
     if(!event){
-            return { ok: false, message: "Event's id does not exist" }
+      return { ok: false, message: "Event's id does not exist" }
     }
-    const update = {
-		title, notes, start, end
-	}
-	
-	const keys = Object.keys(update)
-
-	for(const i of keys){
-		if (update[i]==undefined) {
-			delete update[i]
-		}
-	}
-   
     
     if(!isValidUpdateEventInput(update, event)){
-        return { ok: false, message: "Invalid dates" }
+      return { ok: false, message: "Invalid dates" }
     }
     
-    try {
-        const event = await Event
-        .findByIdAndUpdate(id, {title, notes, start, end})
-
-        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY) as any;
-        
-
-        await event.save();
-        return { ok: true, message: "Event Updated", event:{...event,...update} };
-    } catch (e) {
-        console.log(e)
-        if(e.name==="TokenExpiredError")
-            return { ok: false, message: "Invalid token" }
-        return { ok: false, message: "Event not Updated" };
-    }
+    const response = await updateEventInDb(id, update, token)
+    return response
 };  
 
-export default { createUser, refreshJwt, login, createEvent,updateEvent };
+const getEvents:Mutation["getEvents"]= async (_, args, context) => {
+
+  if(!isValidJwt(args.token)){
+    return {ok:false, message:"Invalid token"}
+  }
+
+  const events = await getEventsForUser(args.createdBy)
+
+  return {
+    events,
+    ok:true,
+    message:"Events retrieved"
+  }
+};
+
+export default { createUser, refreshJwt, login, createEvent,updateEvent,getEvents };

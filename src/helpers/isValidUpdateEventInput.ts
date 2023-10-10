@@ -1,22 +1,17 @@
 import { isStartDateBeforeEndDate } from "./isStartDateBeforeEndDate.js";
 import Event from "../models/events.js";
 
-export const isValidUpdateEventInput = (update:{end:string,start:string}, event:Event ) => {
-    if(((!!update.start||!!update.end) && !(!!update.start&&!!update.end))){
-        if(update?.start?.length>0){
-            if(!isStartDateBeforeEndDate({ start:update?.start, end:event.end })){
-                return false;
-            }
-        }
-        if(update?.end?.length>0){
-            if(!isStartDateBeforeEndDate({ start:event.start, end:update?.end }))
+export const isValidUpdateEventInput = (update:{end?:string,start?:string}, event:Event ) => {
+    const {end,start} = update;
 
-                return false;
+    if(update?.start?.length>0 && !end)
+        return isStartDateBeforeEndDate({ start:update?.start, end:event.end })
 
-        }
+    if(update?.end?.length>0 && !start){
+        return (isStartDateBeforeEndDate({ start:event.start, end:end }))
     }
-    if ((update?.start && update?.end) && !isStartDateBeforeEndDate({ start:update?.start, end:update?.end })){
-        
+
+    if ((update?.start && update?.end) && !isStartDateBeforeEndDate({ start:update?.start, end:update?.end })){     
         return false
     }
 

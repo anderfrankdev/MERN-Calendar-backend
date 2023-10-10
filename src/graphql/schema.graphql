@@ -15,10 +15,22 @@ type EventResponse {
   message: String
   event: Event
 }
+type getEventsResponse {
+  ok: Boolean
+  message: String
+  events: [Event]
+}
+type loginOutput {
+  ok:Boolean!
+  token:String
+  message:String
+  user:User
+}
 type Mutation {
   createUser(fullname: String!, email: String!, password: String!): Response
+  getEvents(token:String, createdBy:String!): getEventsResponse
   refreshJwt(token: String!): Response
-  login(email: String!, password: String!): Response
+  login(email: String!, password: String!): loginOutput
   createEvent(
     title: String!
     notes: String

@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "compile-dev": "pnpm exec tsc -w",
-    "start": "pnpm exec compile && node ./dist/index.js",
+    "start": "npm run compile && NODE_ENV=production node ./dist/index",
     "dev": "nodemon ./dist/index.js"
   },
   "type": "module",
