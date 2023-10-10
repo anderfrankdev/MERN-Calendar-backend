@@ -3,28 +3,49 @@ type Query {
   records: String
 }
 type Event {
-    id:String
+  id: String
+  title: String
+  notes: String
+  start: String
+  end: String
+  createdBy: String
+}
+type EventResponse {
+  ok: Boolean
+  message: String
+  event: Event
+}
+type Mutation {
+  createUser(fullname: String!, email: String!, password: String!): Response
+  refreshJwt(token: String!): Response
+  login(email: String!, password: String!): Response
+  createEvent(
+    title: String!
+    notes: String
+    start: String!
+    end: String!
+    token: String!
+  ): EventResponse
+  updateEvent(
     title: String
     notes: String
     start: String
     end: String
+    token: String!
+    id:String!
+  ): EventResponse
 }
-type Mutation {
-    createUser(fullname: String!, email: String!, password: String!): Response
-    refreshJwt(token:String!): Response
-
-}
-type User{
-  id:ID
-  fullname:String
-  email:String
-  events:[Event]  
+type User {
+  id: ID
+  fullname: String
+  email: String
+  events: [Event]
 }
 scalar Message
 
 type Response {
-    ok:Boolean
-    user:User
-    token:String
-    message:Message
+  ok: Boolean
+  user: User
+  token: String
+  message: Message
 }

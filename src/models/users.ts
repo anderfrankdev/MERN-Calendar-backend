@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { User } from "../types/mutations.js"
+import { User } from "../types/mutations.js";
 
 const UserSchema = new Schema<User>({
   fullname: {

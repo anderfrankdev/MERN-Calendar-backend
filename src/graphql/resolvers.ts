@@ -1,4 +1,4 @@
-import Mutation  from "../graphql/mutations.js";
+import Mutation from "../graphql/mutations.js";
 export const resolvers = {
   Record: {
     id: (parent) => parent.id ?? parent._id,
@@ -11,5 +11,5 @@ export const resolvers = {
       return "Hola";
     },
   },
-  Mutation
+  Mutation,
 };

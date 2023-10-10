@@ -7,7 +7,7 @@ import dbConnection from "./database/config.js";
 await dbConnection();
 
 const server_params = {
-  configurations: [...middlewares/*, ...routes*/],
+  configurations: [...middlewares /*, ...routes*/],
   app: express,
 };
 

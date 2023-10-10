@@ -5,7 +5,7 @@
 ### Users **(ED)**
 
 - user_id **(PK)**
-- fullname 
+- fullname
 - email **(UQ)**
 - password
 

@@ -12,7 +12,7 @@ const passwordOptions = {
 };
 
 // Define a function that validates the password, email, and fullname
-export function isValidRegisterInput(password, email, fullname) {
+export function isValidLoginInput(password: string, email: string) {
   // Initialize an empty array to store the error messages
   let errors = [];
 
@@ -26,12 +26,6 @@ export function isValidRegisterInput(password, email, fullname) {
   if (!validator.default.isEmail(email)) {
     // Push a message of the invalid email to the array
     errors.push("Invalid email: " + email);
-  }
-
-  // Check if the fullname is valid
-  if (fullname.length < 3) {
-    // Push a message of the invalid fullname to the array
-    errors.push("Invalid fullname: " + fullname);
   }
 
   // Return the array of error messages

@@ -15,15 +15,13 @@ class InmutableServer {
 }
 
 const setup_conf = curry<any>(
-  (configurations:any[], app: express.Application): express.Application => {
-    
-    const setup_middleware = (conf: (Function|any[])) => {
-      if(typeof conf==='function') 
-        return app.use((conf as any));
-      
+  (configurations: any[], app: express.Application): express.Application => {
+    const setup_middleware = (conf: Function | any[]) => {
+      if (typeof conf === "function") return app.use(conf as any);
+
       const [middleware, route] = conf;
 
-      return app.use(route,middleware);
+      return app.use(route, middleware);
     };
 
     each(setup_middleware, configurations);
@@ -32,7 +30,7 @@ const setup_conf = curry<any>(
   },
 );
 
-const setup_server = (server_params: any):InmutableServer => {
+const setup_server = (server_params: any): InmutableServer => {
   const { configurations, app } = server_params;
 
   return pipe(
