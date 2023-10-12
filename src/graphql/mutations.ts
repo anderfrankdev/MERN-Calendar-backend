@@ -8,13 +8,11 @@ import generateJWT from "../helpers/generateJwt.js";
 import jwt from "jsonwebtoken";
 import isValidJwt from "../helpers/isValidJwt.js";
 import { isValidRegisterInput } from "../helpers/isValidRegisterInput.js";
-import { isValidLoginInput } from "../helpers/isValidLoginInput.js";
 import { isStartDateBeforeEndDate } from "../helpers/isStartDateBeforeEndDate.js";
 import validator from "validator";
 import { isValidUpdateEventInput } from "../helpers/isValidUpdateEventInput.js";
 import { cleanUndefinedProps } from "../helpers/cleanUndefinedProps.js";
 import { updateEventInDb } from "../helpers/updateEventInDb.js";
-import { getEventsForUser } from "../helpers/getEventsForUserInDb.js";
 
 const createUser: Mutation["createUser"] = async (_, args, context) => {
   const { fullname, email, password } = args;
@@ -65,25 +63,6 @@ const refreshJwt: Mutation["refreshJwt"] = async (_, args, context) => {
   };
 };
 
-const login: Mutation["login"] = async (_, args, context) => {
-  const { email, password } = args;
-  if (isValidLoginInput(password, email)) {
-    const user = await User.findOne({ email });
-    if (!user) return { ok: false, message: "Invalid email or password" };
-    const validPassword = bcrypt.compareSync(password, user.password + "");
-    if (!validPassword)
-      return { ok: false, message: "Invalid email or password" };
-    const token = await generateJWT(user.id);
-    const events = await getEventsForUser(user.id)
-
-    return {
-      ok: true,
-      user: { ...user.toJSON(),events },
-      token,
-    };
-  }
-  return { ok: false, message: "Invalid email or password" };
-};
 
 const createEvent: Mutation["createEvent"] = async (_, args, context) => {
   const { title, notes, start, end, token } = args;
@@ -128,19 +107,5 @@ const updateEvent: Mutation["updateEvent"] = async (_, args, context) => {
     return response
 };  
 
-const getEvents:Mutation["getEvents"]= async (_, args, context) => {
 
-  if(!isValidJwt(args.token)){
-    return {ok:false, message:"Invalid token"}
-  }
-
-  const events = await getEventsForUser(args.createdBy)
-
-  return {
-    events,
-    ok:true,
-    message:"Events retrieved"
-  }
-};
-
-export default { createUser, refreshJwt, login, createEvent,updateEvent,getEvents };
+export default { createUser, refreshJwt, createEvent,updateEvent };

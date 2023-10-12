@@ -1,6 +1,10 @@
 type Query {
   record(id: ID!): String
   records: String
+  getEvents(token:String!): getEventsResponse
+
+  login(email: String!, password: String!): loginOutput
+
 }
 type Event {
   id: String
@@ -28,9 +32,7 @@ type loginOutput {
 }
 type Mutation {
   createUser(fullname: String!, email: String!, password: String!): Response
-  getEvents(token:String, createdBy:String!): getEventsResponse
   refreshJwt(token: String!): Response
-  login(email: String!, password: String!): loginOutput
   createEvent(
     title: String!
     notes: String
