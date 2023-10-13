@@ -22,14 +22,26 @@ const getEvents:Mutation["getEvents"]= async (_, args, context) => {
   if(!isValidJwt(args.token)){
     return {ok:false, message:"Invalid token"}
   }
-  const {uid} =  jwt.verify(args.token, process.env.SECRETORPRIVATEKEY) as any;
+  
+  try{
+  
+    const {uid} =  jwt.verify(args.token, process.env.SECRETORPRIVATEKEY) as any;
 
-  const events = await getEventsForUser(uid)
+    const events = await getEventsForUser(uid)
+
+    return {
+      events,
+      ok:true,
+      message:"Events retrieved"
+    }
+  
+  }catch(e){
+
+  }
 
   return {
-    events,
-    ok:true,
-    message:"Events retrieved"
+      ok:false,
+      message:"invalid token"
   }
 };
 const login: Mutation["login"] = async (_, args, context) => {
@@ -51,5 +63,25 @@ const login: Mutation["login"] = async (_, args, context) => {
   }
   return { ok: false, message: "Invalid email or password" };
 };
+const getUserData: Mutation["getUserData"] = async (_, args, context) => {
+  
+  const { token } = args;
 
-export default {...query,getEvents,login}
+  try{
+    const {uid} =  jwt.verify(args.token, process.env.SECRETORPRIVATEKEY) as any;
+
+    const events = await getEventsForUser(uid)
+    const user = await User.findById(uid);
+
+    return {
+      user: { ...user.toJSON(),events },
+      ok:true,
+      message:"Login "
+    }
+  }catch(e){
+  };
+
+  return { ok: false, message: "Invalid token" };
+
+};
+export default {...query,getEvents,login,getUserData}

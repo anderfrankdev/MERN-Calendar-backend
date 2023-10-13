@@ -2,6 +2,7 @@ type Query {
   record(id: ID!): String
   records: String
   getEvents(token:String!): getEventsResponse
+  getUserData(token: String!): Response
 
   login(email: String!, password: String!): loginOutput
 

@@ -53,4 +53,5 @@ export interface Mutation {
   createEvent(_: any, args: EventInput, context: any): Promise<eventResponse>;
   updateEvent(_: any, args: EventInput, context: any): Promise<eventResponse>;
   getEvents(_: any, args: {token:string}, context: any): Promise<getEventsResponse>;
+  getUserData(_: any, args: {token:string}, context: any): Promise<Response>;
 }
