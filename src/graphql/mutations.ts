@@ -77,8 +77,8 @@ const createEvent: Mutation["createEvent"] = async (_, args, context) => {
     await event.save();
     return { ok: true, message: "Event created", event };
   } catch (e) {
-
-    return { ok: false, message: "Event not created" };
+    if(e.name==="TokenExpiredError") return { ok: false, message: "Token expired" };
+    else return { ok: false, message: "Event not created" };
   }
 };
 
