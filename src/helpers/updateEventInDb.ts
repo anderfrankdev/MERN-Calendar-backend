@@ -17,7 +17,7 @@ export const updateEventInDb = async (id,update,token) => {
     } catch (e) {
         console.log(e)
         if(e.name==="TokenExpiredError")
-            return { ok: false, message: "Invalid token" }
+            return { ok: false, message: "Token expired" }
         return { ok: false, message: "Event not Updated" };
     }
 

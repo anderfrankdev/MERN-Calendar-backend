@@ -82,11 +82,24 @@ const createEvent: Mutation["createEvent"] = async (_, args, context) => {
   }
 };
 
+const deleteEvent: Mutation["deleteEvent"] = async (_, args, context) => {
+  const { eventId, token } = args;
+
+  try {
+    const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY) as any;
+    const event = await Event.findByIdAndDelete(eventId)
+
+    return { ok: true, message: "Event deleted" };
+  } catch (e) {
+    if(e.name==="TokenExpiredError") return { ok: false, message: "Token expired" };
+    else return { ok: false, message: "Event not deleted" };
+  }
+};
+
 const updateEvent: Mutation["updateEvent"] = async (_, args, context) => {
     const { id,title, notes, start, end, token } = args;
-    
-    const update = cleanUndefinedProps({ title, notes, start, end })
 
+    const update = cleanUndefinedProps({ title, notes, start, end })
     if(update?.title?.length<1)
       return { ok: false, message: "Title can not be empty" }
 
@@ -108,4 +121,4 @@ const updateEvent: Mutation["updateEvent"] = async (_, args, context) => {
 };  
 
 
-export default { createUser, refreshJwt, createEvent,updateEvent };
+export default { createUser, refreshJwt, createEvent,updateEvent,deleteEvent };

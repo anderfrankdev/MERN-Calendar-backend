@@ -31,9 +31,14 @@ type loginOutput {
   message:String
   user:User
 }
+type SimpleRes {
+  ok:Boolean
+  message:String
+}
 type Mutation {
   createUser(fullname: String!, email: String!, password: String!): Response
   refreshJwt(token: String!): Response
+  deleteEvent(token: String!,eventId:String!): SimpleRes
   createEvent(
     title: String!
     notes: String
