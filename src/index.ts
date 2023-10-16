@@ -13,4 +13,4 @@ const server_params = {
   app: express,
 };
 
-setup_server(server_params).listen(3000);
+setup_server(server_params).listen(port);
