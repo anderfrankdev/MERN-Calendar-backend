@@ -1,9 +1,10 @@
 import middlewares from "./middlewares/index.js";
 import setup_server from "./models/server.js";
 import express from "express";
-import "dotenv/config";
 import dbConnection from "./database/config.js";
+import dotenv from "dotenv";
 
+dotenv.config()
 const port = Number(process.env.PORT) || 8080
 
 await dbConnection();
