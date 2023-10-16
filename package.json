@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npx tsc && NODE_ENV=production node ./dist/index",
     "compile": "tsc",
-    "compile-dev": "pnpm exec tsc -w",
-    "start": "npm run compile && NODE_ENV=production node ./dist/index",
+    "compile-dev": "tsc -w",
     "dev": "nodemon ./dist/index.js"
   },
   "type": "module",
