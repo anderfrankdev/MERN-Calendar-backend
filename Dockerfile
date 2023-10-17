@@ -36,5 +36,5 @@ COPY package.json ./
 RUN mkdir src
 RUN mkdir src/graphql
 COPY src/graphql/schema.graphql ./src/graphql
-
+ENV NODE_ENV=production
 CMD [ "node","dist/index.js"]
